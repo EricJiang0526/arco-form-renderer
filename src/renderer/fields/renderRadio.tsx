@@ -1,8 +1,8 @@
-import { Select } from '@arco-design/web-vue'
+import { Radio } from '@arco-design/web-vue'
 import type { BaseFieldSchema } from '../types'
 import { renderFormItem } from './renderFormItem'
 
-export const renderSelect = ({
+export const renderRadio = ({
   schema,
   model,
   extra,
@@ -17,29 +17,13 @@ export const renderSelect = ({
   const loading = extra.loading[schema.field] || false
 
   const content = () => (
-    <Select
+    <Radio.Group
       {...schema.props}
       v-model={model[schema.field]}
       options={options}
       loading={loading}
-    ></Select>
+    ></Radio.Group>
   )
 
   return renderFormItem({ schema, content, isInGroup })
-
-  // return (
-  //   <FormItem
-  //     field={schema.field}
-  //     hideLabel={hideLabel}
-  //     label={schema.label}
-  //     rules={resolveValidationRules(schema.validation)}
-  //   >
-  //     <Select
-  //       {...schema.props}
-  //       v-model={model[schema.field]}
-  //       options={options}
-  //       loading={loading}
-  //     ></Select>
-  //   </FormItem>
-  // )
 }

@@ -8,6 +8,11 @@ export type FieldType =
   | 'password'
   | 'group'
 
+export interface Option {
+  label: string
+  value: any
+}
+
 export interface LayoutConfig {
   /**
    * 栅格跨度（默认 24）对应 <a-col :span="">
@@ -70,12 +75,25 @@ export interface ValidationSchema {
 }
 
 export interface RemoteConfig {
+  /**
+   * 监听哪些字段变化触发远程请求
+   */
   watch?: (string | ((model: Record<string, any>, context?: any) => any))[]
-  asyncOptions: (
-    model: Record<string, any>,
-    context?: any,
-  ) => Promise<{ label: string; value: any }[]>
+
+  /**
+   * 异步选项获取函数
+   * 可以是一个 Promise，也可以直接返回数组
+   */
+  asyncOptions: (model: Record<string, any>, context?: any) => Promise<Option[]>
+
+  /**
+   * 当依赖字段变化时是否重置选中值
+   */
   resetOnChange?: boolean
+
+  /**
+   * 自动选择选项（first: 默认选第一项）
+   */
   autoSelect?: 'first' | ((option: Option) => any)
 }
 

@@ -99,5 +99,21 @@ const schema: FieldSchema[] = [
       },
     ],
   },
+  {
+    field: 'loginType',
+    label: '登录方式',
+    type: 'radio',
+    remoteConfig: {
+      asyncOptions: async () => [
+        { label: '账号密码', value: 'password' },
+        { label: '验证码', value: 'code' },
+      ],
+      autoSelect: 'first',
+    },
+    validation: {
+      required: true,
+      message: '请选择登录方式',
+    },
+  },
 ]
 </script>
