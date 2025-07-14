@@ -9,12 +9,48 @@ export type FieldType =
   | 'group'
 
 export interface LayoutConfig {
-  span?: number // 对应 a-col 的 span（24 栅格）
-  offset?: number // 偏移栅格数
-  gap?: number // 垂直/水平间距（用于 group）
-  direction?: 'horizontal' | 'vertical' // group 专用
+  /**
+   * 栅格跨度（默认 24）对应 <a-col :span="">
+   */
+  span?: number
+
+  /**
+   * 栅格偏移量（对应 <a-col :offset="">）
+   */
+  offset?: number
+
+  /**
+   * 元素之间的间距（用于 group 横/纵布局时的 gap）
+   */
+  gap?: number
+
+  /**
+   * 排列方向，仅用于 group 类型
+   * - horizontal：水平排列（一般用于 inline 表单）
+   * - vertical：垂直排列（默认）
+   */
+  direction?: 'horizontal' | 'vertical'
+
+  /**
+   * 标签宽度，可用于统一控制 FormItem 的 label 宽度
+   * 示例：labelWidth: 120 或 '100px'
+   */
   labelWidth?: number | string
-  style?: Partial<CSSStyleDeclaration> // 用于精确控制宽度、margin 等
+
+  /**
+   * 自定义内联样式，精细控制每个字段容器（如宽度、margin）
+   */
+  style?: Partial<CSSStyleDeclaration>
+
+  /**
+   * 自定义类名（用于样式挂钩）
+   */
+  className?: string
+
+  /**
+   * 自定义透传给 <a-col> 的额外属性（如 responsive 设置）
+   */
+  colProps?: Record<string, any>
 }
 
 export type ValidateTypeLiteral = 'phone' | 'idcard'

@@ -1,22 +1,42 @@
-import { FormItem, Input } from '@arco-design/web-vue'
-import type { BaseFieldSchema, FieldSchema } from '../types/schema'
+import type { CSSProperties } from 'vue'
+import { FormItem, Row } from '@arco-design/web-vue'
+import type { GroupFieldSchema, FieldSchema } from '../types'
 import { renderField } from '../renderField'
 
-export const renderGroup = (
-  schema: BaseFieldSchema,
-  model: Record<string, any>,
-  extra: Record<string, any>,
-) => {
+export const renderGroup = ({
+  schema,
+  model,
+  extra,
+  isInGroup = false,
+}: {
+  schema: GroupFieldSchema
+  model: Record<string, any>
+  extra: Record<string, any>
+  isInGroup?: boolean
+}) => {
   const { fields, label = '', layout = {}, validation } = schema
   const { gap = 8, direction = 'horizontal' } = layout
 
   const hasValidation = validation ?? fields.some((field: FieldSchema) => field.validation)
+  const hideLabel = !!isInGroup
 
-  console.log(11, schema)
+  const style: CSSProperties = {
+    width: '100%',
+    display: 'flex',
+    gap: `${gap}px`,
+    flexDirection: direction === 'vertical' ? 'column' : 'row',
+  }
+
+  const content = () =>
+    fields.map((schema: FieldSchema) => renderField({ schema, model, extra, isInGroup: true }))
 
   return (
-    <FormItem label={label} required={hasValidation}>
-      {schema.fields.map((schema: FieldSchema) => renderField(schema, model, extra))}
+    <FormItem hideLabel={hideLabel} label={label} required={hasValidation} class="form-item-group">
+      {direction === 'horizontal' ? (
+        <Row gutter={gap}>{content()}</Row>
+      ) : (
+        <div style={style}>{content()}</div>
+      )}
     </FormItem>
   )
 }

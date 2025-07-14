@@ -46,59 +46,57 @@ const schema: FieldSchema[] = [
         props: {
           placeholder: '请选择责任人所属组织',
           allowClear: true,
-          options: [
-            { label: '组织1', value: 'org1' },
-            { label: '组织2', value: 'org2' },
-            { label: '组织3', value: 'org3' },
-          ],
         },
         validation: {
           required: true,
           message: '请选择责任人所属组织',
         },
         layout: {
-          span: 12,
+          span: 8,
         },
-        // remoteConfig: {
-        //   asyncOptions: () =>
-        //     mockRemote(1000, () => [
-        //       { label: '组织1', value: 'org1' },
-        //       { label: '组织2', value: 'org2' },
-        //       { label: '组织3', value: 'org3' },
-        //     ]),
-        // },
+        remoteConfig: {
+          asyncOptions: () =>
+            mockRemote(1000, () => [
+              { label: '组织1', value: 'org1' },
+              { label: '组织2', value: 'org2' },
+              { label: '组织3', value: 'org3' },
+            ]),
+          autoSelect: 'first',
+        },
       },
-      // {
-      //   field: 'owner',
-      //   type: 'select',
-      //   props: {
-      //     placeholder: '请选择责任人',
-      //     allowClear: true,
-      //   },
-      //   validation: {
-      //     required: true,
-      //     message: '请选择责任人',
-      //   },
-      //   layout: {
-      //     span: 12,
-      //   },
-      //   remoteConfig: {
-      //     watch: ['org'],
+      {
+        field: 'owner',
+        type: 'select',
+        props: {
+          placeholder: '请选择责任人',
+          allowClear: true,
+        },
+        validation: {
+          required: true,
+          message: '请选择责任人',
+        },
+        layout: {
+          span: 16,
+        },
+        remoteConfig: {
+          watch: ['org'],
 
-      //     asyncOptions: (model) =>
-      //       mockRemote(1000, () => {
-      //         const org = model.org
-      //         const list = [
-      //           { label: '责任人1', value: 'owner1', org: 'org1' },
-      //           { label: '责任人2', value: 'owner2', org: 'org2' },
-      //           { label: '责任人3', value: 'owner3', org: 'org3' },
-      //         ]
-      //         return list.filter((item) => item.org === org)
-      //       }),
-      //     resetOnChange: true,
-      //     autoSelect: 'first',
-      //   },
-      // },
+          asyncOptions: (model) =>
+            mockRemote(1000, () => {
+              console.log('fetching owners for org:', model.org)
+
+              const org = model.org
+              const list = [
+                { label: '责任人1', value: 'owner1', org: 'org1' },
+                { label: '责任人2', value: 'owner2', org: 'org2' },
+                { label: '责任人3', value: 'owner3', org: 'org3' },
+              ]
+              return list.filter((item) => item.org === org)
+            }),
+          resetOnChange: true,
+          autoSelect: 'first',
+        },
+      },
     ],
   },
 ]
