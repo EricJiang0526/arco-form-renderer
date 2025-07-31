@@ -1,8 +1,9 @@
-import { Radio } from '@arco-design/web-vue'
+import { RangePicker } from '@arco-design/web-vue'
 import type { BaseFieldSchema } from '../types'
 import { renderFormItem } from './renderFormItem'
+import { wrapModelValue } from '@/renderer/utils/applyValueMap'
 
-export const renderRadio = ({
+export const renderRangePicker = ({
   schema,
   model,
   extra,
@@ -15,14 +16,19 @@ export const renderRadio = ({
 }) => {
   const options = schema.options || extra.options?.[schema.field] || []
   const loading = extra.loading[schema.field] || false
+  const layout = schema.layout
 
   const content = () => (
-    <Radio.Group
+    <RangePicker
       {...schema.props}
-      v-model={model[schema.field]}
+      modelValue={wrapModelValue(schema, model)}
+      onUpdate:modelValue={(val) => {
+        schema.valueMap?.valueParser?.(val, model)
+      }}
       options={options}
       loading={loading}
-    ></Radio.Group>
+      style={layout?.style}
+    ></RangePicker>
   )
 
   return renderFormItem({ schema, content, isInGroup })

@@ -3,9 +3,12 @@ export type FieldType =
   | 'textarea'
   | 'select'
   | 'radio'
-  | 'checkbox'
+  | 'checkboxGroup'
   | 'date'
   | 'password'
+  | 'cascader'
+  | 'treeSelect'
+  | 'rangePicker'
   | 'group'
 
 export interface Option {
@@ -74,6 +77,11 @@ export interface ValidationSchema {
   rules?: Rule[]
 }
 
+export interface ValueMap {
+  valueFormatter?: (model: any) => any
+  valueParser?: (value: any, model: any) => void
+}
+
 export interface RemoteConfig {
   /**
    * 监听哪些字段变化触发远程请求
@@ -105,8 +113,12 @@ export interface BaseFieldSchema {
   layout?: LayoutConfig
   disabled?: boolean | ((model: Record<string, any>) => boolean)
   visible?: boolean | ((model: Record<string, any>) => boolean)
+  resetOnHide?: boolean
   validation?: ValidationSchema
   remoteConfig?: RemoteConfig
+  options?: Option[]
+  valueMap?: ValueMap
+  virtual?: boolean
 }
 
 export interface GroupFieldSchema {
@@ -116,6 +128,7 @@ export interface GroupFieldSchema {
   fields: FieldSchema[]
   validation?: boolean
   visible?: boolean | ((model: Record<string, any>) => boolean)
+  resetOnHide?: boolean
 }
 
 export type FieldSchema = BaseFieldSchema | GroupFieldSchema

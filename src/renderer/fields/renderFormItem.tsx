@@ -15,7 +15,7 @@ export const renderFormItem = ({
 
   const hideLabel = !!isInGroup
 
-  const { span = 24, offset = 0, style, className, colProps = {} } = layout
+  const { span = 24, offset = 0, className, colProps = {} } = layout
 
   const item = (
     <FormItem
@@ -29,7 +29,7 @@ export const renderFormItem = ({
   )
 
   return (
-    <Col span={span} offset={offset} {...colProps} class={className} style={style}>
+    <Col span={span} offset={offset} {...colProps} class={className}>
       {item}
     </Col>
   )

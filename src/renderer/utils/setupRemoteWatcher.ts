@@ -1,23 +1,31 @@
 import { watch } from 'vue'
-import type { Reactive } from 'vue'
-import type { FieldSchema } from '@/types'
+import type { ComputedRef, Reactive } from 'vue'
+import type { FieldSchema, ExtraType } from '@/renderer/types'
+import { traverseSchema } from './schemaHelper'
 
 export const setupRemoteWatcher = (
   schema: FieldSchema[],
-  model: Reactive<Record<string, any>>,
-  extra: Reactive<Record<string, any>>,
+  model: ComputedRef<Record<string, any>>,
+  extra: Reactive<ExtraType>,
 ) => {
   const watchFields: Record<string, ((model: Record<string, any>, context?: any) => any)[]> = {}
   traverseSchema(schema, (field) => {
-    if (!field.remoteConfig) {
+    if (field.type === 'group') {
       return
     }
-    const { watch, asyncOptions, resetOnChange = false, autoSelect = 'first' } = field.remoteConfig
+    const {
+      watch,
+      asyncOptions,
+      resetOnChange = false,
+      autoSelect = 'first',
+    } = field.remoteConfig || {}
 
     if (!asyncOptions) {
-      console.warn(
-        `Field "${field.field}" has remoteConfig.watch but no asyncOptions defined. Please check your schema.`,
-      )
+      if (watch) {
+        console.warn(
+          `Field "${field.field}" has remoteConfig.watch but no asyncOptions defined. Please check your schema.`,
+        )
+      }
       return
     }
 
@@ -26,10 +34,12 @@ export const setupRemoteWatcher = (
         model[field.field] = null
       }
       extra.loading[field.field] = true
+
       extra.options[field.field] = await asyncOptions(model).catch((e) => {
         console.error(`Error fetching options for field "${field}":`, e)
         return []
       })
+
       extra.loading[field.field] = false
       if (autoSelect === 'first' && extra.options[field.field]?.length > 0) {
         model[field.field] = extra.options[field.field][0].value
@@ -45,7 +55,7 @@ export const setupRemoteWatcher = (
 
     if (Array.isArray(watch)) {
       watch.forEach((f: (model: Record<string, any>, context?: any) => any) => {
-        const watchField = typeof f === 'string' ? f : f(model)
+        const watchField = typeof f === 'string' ? f : f(model.value)
 
         if (!watchFields[watchField]) {
           watchFields[watchField] = [getOptions]
@@ -54,7 +64,7 @@ export const setupRemoteWatcher = (
         }
       })
     } else {
-      getOptions(model)
+      getOptions(model.value)
     }
   })
 
@@ -62,19 +72,10 @@ export const setupRemoteWatcher = (
 
   Object.entries(watchFields).forEach(([field, getOptionList]) => {
     watch(
-      () => model[field],
+      () => model.value[field],
       () => {
-        getOptionList.forEach((getOptions) => getOptions(model))
+        getOptionList.forEach((getOptions) => getOptions(model.value))
       },
     )
-  })
-}
-
-export const traverseSchema = (schema: FieldSchema[], action: (s: FieldSchema) => void) => {
-  schema.forEach((field) => {
-    action(field)
-    if (field.type === 'group' && field.fields) {
-      traverseSchema(field.fields, action)
-    }
   })
 }

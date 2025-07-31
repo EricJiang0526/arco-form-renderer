@@ -1,9 +1,10 @@
-import { defineComponent, reactive, watch, toRefs, computed } from 'vue'
+import { defineComponent, reactive, computed } from 'vue'
 import type { PropType } from 'vue'
 import { Form } from '@arco-design/web-vue'
 import type { FieldSchema } from './types'
 import { renderField } from './renderField'
 import { setupRemoteWatcher } from './utils/setupRemoteWatcher'
+import { applyGetValueMap, applySetValueMap } from './utils/applyValueMap'
 import './styles/common.css'
 
 export default defineComponent({
@@ -14,11 +15,11 @@ export default defineComponent({
       required: true,
     },
     modelValue: {
-      type: Object as () => Record<string, any>,
+      type: Object as PropType<Record<string, unknown>>,
       required: true,
     },
     labelAlign: {
-      type: String as () => 'left' | 'right',
+      type: String as PropType<'left' | 'right'>,
       default: 'left',
     },
     autoLabelWidth: {
@@ -28,19 +29,32 @@ export default defineComponent({
   },
 
   setup(props, { emit }) {
-    const model = reactive({ ...props.modelValue })
+    const model = computed({
+      get: () => props.modelValue,
+      set: (val) => emit('update:modelValue', val),
+    })
 
     const extra = reactive({
-      options: {} as Record<string, any>,
-      loading: {} as Record<string, boolean>,
+      loading: {},
+      options: {},
     })
 
     setupRemoteWatcher(props.schema, model, extra)
 
+    applyGetValueMap(props.schema, model.value)
+
+    emit('init', { extra })
+
     return () => {
       return (
-        <Form model={model} labelAlign={props.labelAlign} autoLabelWidth={props.autoLabelWidth}>
-          {props.schema.map((schema: FieldSchema) => renderField({ schema, model, extra }))}
+        <Form
+          model={model.value}
+          labelAlign={props.labelAlign}
+          autoLabelWidth={props.autoLabelWidth}
+        >
+          {props.schema.map((schema: FieldSchema) =>
+            renderField({ schema, model: model.value, extra }),
+          )}
         </Form>
       )
     }

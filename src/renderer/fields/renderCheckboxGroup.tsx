@@ -1,8 +1,8 @@
-import { Radio } from '@arco-design/web-vue'
+import { Checkbox } from '@arco-design/web-vue'
 import type { BaseFieldSchema } from '../types'
 import { renderFormItem } from './renderFormItem'
 
-export const renderRadio = ({
+export const renderCheckboxGroup = ({
   schema,
   model,
   extra,
@@ -17,12 +17,13 @@ export const renderRadio = ({
   const loading = extra.loading[schema.field] || false
 
   const content = () => (
-    <Radio.Group
-      {...schema.props}
-      v-model={model[schema.field]}
-      options={options}
-      loading={loading}
-    ></Radio.Group>
+    <Checkbox.Group {...schema.props} v-model={model[schema.field]} loading={loading}>
+      {options?.map((option) => (
+        <Checkbox key={option.value} value={option.value}>
+          {option.label}
+        </Checkbox>
+      ))}
+    </Checkbox.Group>
   )
 
   return renderFormItem({ schema, content, isInGroup })

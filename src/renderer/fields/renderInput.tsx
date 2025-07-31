@@ -12,6 +12,9 @@ export const renderInput = ({
   model: Record<string, any>
   isInGroup?: boolean
 }) => {
-  const content = () => <Input {...schema.props} v-model={model[schema.field]} />
+  const layout = schema.layout
+  const content = () => (
+    <Input {...schema.props} v-model={model[schema.field]} style={layout?.style} />
+  )
   return renderFormItem({ schema, content, isInGroup })
 }

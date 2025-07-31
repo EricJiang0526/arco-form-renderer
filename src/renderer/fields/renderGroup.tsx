@@ -1,5 +1,5 @@
 import type { CSSProperties } from 'vue'
-import { FormItem, Row } from '@arco-design/web-vue'
+import { FormItem } from '@arco-design/web-vue'
 import type { GroupFieldSchema, FieldSchema } from '../types'
 import { renderField } from '../renderField'
 
@@ -32,11 +32,7 @@ export const renderGroup = ({
 
   return (
     <FormItem hideLabel={hideLabel} label={label} required={hasValidation} class="form-item-group">
-      {direction === 'horizontal' ? (
-        <Row gutter={gap}>{content()}</Row>
-      ) : (
-        <div style={style}>{content()}</div>
-      )}
+      <div style={style}>{content()}</div>
     </FormItem>
   )
 }

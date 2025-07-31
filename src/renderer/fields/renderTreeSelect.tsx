@@ -1,8 +1,8 @@
-import { Radio } from '@arco-design/web-vue'
+import { TreeSelect } from '@arco-design/web-vue'
 import type { BaseFieldSchema } from '../types'
 import { renderFormItem } from './renderFormItem'
 
-export const renderRadio = ({
+export const renderTreeSelect = ({
   schema,
   model,
   extra,
@@ -15,14 +15,18 @@ export const renderRadio = ({
 }) => {
   const options = schema.options || extra.options?.[schema.field] || []
   const loading = extra.loading[schema.field] || false
+  const layout = schema.layout
 
   const content = () => (
-    <Radio.Group
+    <TreeSelect
+      allowClear={true}
+      allowSearch={true}
       {...schema.props}
       v-model={model[schema.field]}
-      options={options}
+      data={options}
       loading={loading}
-    ></Radio.Group>
+      style={layout?.style}
+    ></TreeSelect>
   )
 
   return renderFormItem({ schema, content, isInGroup })
