@@ -1,6 +1,7 @@
 import { FormItem, Col } from '@arco-design/web-vue'
 import type { BaseFieldSchema } from '@/renderer/types'
 import { resolveValidationRules } from '@/renderer/utils/resolveValidationRules'
+import type { VNode } from 'vue'
 
 export const renderFormItem = ({
   schema,
@@ -8,7 +9,7 @@ export const renderFormItem = ({
   isInGroup = false,
 }: {
   schema: BaseFieldSchema
-  content: () => JSX.Element
+  content: () => VNode
   isInGroup?: boolean
 }) => {
   const { field, label = '', layout = {}, validation } = schema
@@ -16,6 +17,8 @@ export const renderFormItem = ({
   const hideLabel = !!isInGroup
 
   const { span = 24, offset = 0, className, colProps = {} } = layout
+
+  console.log(resolveValidationRules(validation))
 
   const item = (
     <FormItem

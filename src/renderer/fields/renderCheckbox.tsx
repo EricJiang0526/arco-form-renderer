@@ -2,7 +2,7 @@ import { Checkbox } from '@arco-design/web-vue'
 import type { BaseFieldSchema } from '../types'
 import { renderFormItem } from './renderFormItem'
 
-export const renderCheckboxGroup = ({
+export const renderCheckbox = ({
   schema,
   model,
   extra,

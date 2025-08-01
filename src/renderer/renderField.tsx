@@ -3,7 +3,7 @@ import { renderSelect } from './fields/renderSelect'
 import { renderGroup } from './fields/renderGroup'
 import { renderRadio } from './fields/renderRadio'
 import { renderCascader } from './fields/renderCascader'
-import { renderCheckboxGroup } from './fields/renderCheckboxGroup'
+import { renderCheckbox } from './fields/renderCheckbox'
 import { renderTreeSelect } from './fields/renderTreeSelect'
 import { renderRangePicker } from './fields/renderRangePicker'
 import type { FieldSchema } from '@/renderer/types'
@@ -56,8 +56,8 @@ export const renderField = ({
       return renderRadio({ schema, model, extra, isInGroup })
     case 'cascader':
       return renderCascader({ schema, model, extra, isInGroup })
-    case 'checkboxGroup':
-      return renderCheckboxGroup({ schema, model, extra, isInGroup })
+    case 'checkbox':
+      return renderCheckbox({ schema, model, extra, isInGroup })
     case 'treeSelect':
       return renderTreeSelect({ schema, model, extra, isInGroup })
     case 'rangePicker':

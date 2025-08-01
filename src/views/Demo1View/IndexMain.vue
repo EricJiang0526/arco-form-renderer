@@ -51,7 +51,7 @@ const schema: FieldSchema[] = [
       },
       {
         field: 'coverAreaCodes',
-        type: 'checkboxGroup',
+        type: 'checkbox',
         resetOnHide: false,
         options: [
           {

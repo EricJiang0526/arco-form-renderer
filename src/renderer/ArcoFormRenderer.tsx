@@ -1,10 +1,10 @@
-import { defineComponent, reactive, computed } from 'vue'
+import { defineComponent, reactive, computed, ref } from 'vue'
 import type { PropType } from 'vue'
 import { Form } from '@arco-design/web-vue'
 import type { FieldSchema } from './types'
 import { renderField } from './renderField'
 import { setupRemoteWatcher } from './utils/setupRemoteWatcher'
-import { applyGetValueMap, applySetValueMap } from './utils/applyValueMap'
+import { applyGetValueMap } from './utils/applyValueMap'
 import './styles/common.css'
 
 export default defineComponent({
@@ -28,7 +28,9 @@ export default defineComponent({
     },
   },
 
-  setup(props, { emit }) {
+  setup(props, { emit, expose }) {
+    const formRef = ref<InstanceType<typeof Form>>()
+
     const model = computed({
       get: () => props.modelValue,
       set: (val) => emit('update:modelValue', val),
@@ -45,9 +47,16 @@ export default defineComponent({
 
     emit('init', { extra })
 
+    expose({
+      validate: () => {
+        formRef.value?.validate?.()
+      },
+    })
+
     return () => {
       return (
         <Form
+          ref={formRef}
           model={model.value}
           labelAlign={props.labelAlign}
           autoLabelWidth={props.autoLabelWidth}

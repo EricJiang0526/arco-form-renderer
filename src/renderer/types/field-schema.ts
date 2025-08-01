@@ -3,7 +3,7 @@ export type FieldType =
   | 'textarea'
   | 'select'
   | 'radio'
-  | 'checkboxGroup'
+  | 'checkbox'
   | 'date'
   | 'password'
   | 'cascader'
